@@ -63,4 +63,4 @@ tidy_data <- melt(accelerometer_data, id=c("subject", "activity")
 )
 final_tidy_data <- dcast(tidy_data, subject+activity ~ variable, mean)
 
-
+write.table(final_tidy_data, file="final_tidy_data.csv", sep=",", row.names= F)
