@@ -6,7 +6,7 @@ The purpose of this project was to demostrate the ability to create a tidy data 
 
 For the purposes of this project, the raw data is the processed data contained in the UCI HAR Dataset (the data that I have not run any software on.) We were provided the following files:
 
-- activity_label.txt, which list the six activities. I used the informatin in this file to manually recode the labels from numberical labels to the more descriptive labels, as required by the project. 
+- activity_label.txt, which list the six activities. I used the information in this file to manually recode the labels from numerical labels to more descriptive labels, as required by the project. 
 - features_info.txt, which contains information about the processed data. 
 - features.txt , which contains a list of the 561 columns of processed data. I used grepl to identify columns the mean and standard deviation data. I then used the logical vector to index the columns in the data set I wanted to keep. 
 - subject_test.txt (dimension 2947 by 1 column), which contain the number of the volunteer. 
