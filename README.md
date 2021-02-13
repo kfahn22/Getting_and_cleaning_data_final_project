@@ -21,3 +21,85 @@ Codebook.Rmd contains all the steps I took to tranform the data into a tidy data
 run_analysis.R contains the R script
 
 final_tidy_data.csv contains the final tidy data set
+
+The final tidy data set contains 180 observations of 68 variables.  
+
+- each observation forms a row  
+- each variable forms a column  
+
+- The first column, subject, is an id variable ranging from 1-30 that identifies 
+the volunteer
+- The second column, activity, is a descriptive id variable that lists the 
+activity of the volunteer. 
+- Columns 3:68 contain the average value of the processed data for each subject
+and activity
+
+- "tacceleration_-mean()-X"  
+-  "tacceleration_-mean()-Y"                
+-  "tacceleration_-mean()-Z" 
+-  "tacceleration_-std()-X"  
+-  "tacceleration_-std()-Y"   
+-  "tacceleration_-std()-Z"                   
+-  "tgravity_acceleration_-mean()-X"  
+-  "tgravity_acceleration_-mean()-Y"          
+-  "tgravity_acceleration_-mean()-Z"  
+-  "tgravity_acceleration_-std()-X"   
+-  "tgravity_acceleration_-std()-Y"   
+-  "tgravity_acceleration_-std()-Z"
+-  "tacceleration_jerk_-mean()-X" 
+-  "tacceleration_jerk_-mean()-Y"  
+-  "tacceleration_jerk_-mean()-Z"  
+-  "tacceleration_jerk_-std()-X"  
+-  "tacceleration_jerk_-std()-Y" 
+-  "tacceleration_jerk_-std()-Z"  
+-  "tgyroscope_-mean()-X"    
+-  "tgyroscope_-mean()-Y"                     
+-  "tgyroscope_-mean()-Z"   
+-  "tgyroscope_-std()-X"                      
+-  "tgyroscope_-std()-Y"   
+-  "tgyroscope_-std()-Z"                      
+-  "tgyroscope_jerk_-mean()-X" 
+-  "tgyroscope_jerk_-mean()-Y"              
+-  "tgyroscope_jerk_-mean()-Z"  
+-  "tgyroscope_jerk_-std()-X"               
+-  "tgyroscope_jerk_-std()-Y" 
+-  "tgyroscope_jerk_-std()-Z"               
+-  "tacceleration_magnitude_-mean()"   
+-  "tacceleration_magnitude_-std()"         
+-  "tgravity_acceleration_magnitude_-mean()" 
+-  "tgravity_acceleration_magnitude_-std()" 
+-  "tacceleration_jerk_magnitude_-mean()"  
+-  "tacceleration_jerk_magnitude_-std()"    
+-  "tgyroscope_magnitude_-mean()"  
+-  "tgyroscope_magnitude_-std()"            
+-  "tgyroscope_jerk_magnitude_-mean()" 
+-  "tgyroscope_jerk_magnitude_-std()"       
+-  "facceleration_-mean()-X"   
+-  "facceleration_-mean()-Y"                
+-  "facceleration_-mean()-Z"   
+-  "facceleration_-std()-X"                 
+-  "facceleration_-std()-Y" 
+-  "facceleration_-std()-Z"                 
+-  "facceleration_jerk_-mean()-X"  
+-  "facceleration_jerk_-mean()-Y"           
+-  "facceleration_jerk_-mean()-Z" 
+-  "facceleration_jerk_-std()-X"            
+-  "facceleration_jerk_-std()-Y" 
+-  "facceleration_jerk_-std()-Z"            
+-  "fgyroscope_-mean()-X" 
+-  "fgyroscope_-mean()-Y"                   
+-  "fgyroscope_-mean()-Z"    
+-  "fgyroscope_-std()-X"                    
+-  "fgyroscope_-std()-Y"  
+-  "fgyroscope_-std()-Z"                    
+-  "facceleration_magnitude_-mean()"  
+-  "facceleration_magnitude_-std()"         
+-  "facceleration_jerk_magnitude_-mean()"  
+-  "facceleration_jerk_magnitude_-std()"    
+-  "fgyroscope_magnitude_-mean()"   
+-  "fgyroscope_magnitude_-std()"  
+
+### References:
+
+https://thoughtfulbloke.wordpress.com/2015/09/09/getting-and-cleaning-the-assignment/
+https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html
