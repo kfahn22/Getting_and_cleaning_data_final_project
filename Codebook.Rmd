@@ -50,7 +50,7 @@ mean and standard deviation data.
 As stated in the assignment description, it is assumed that the files are in 
 the working directory.
 
-### Step 1:  Read in the feature.txt data set and transform names so that they are descriptive, as required by the assignment.
+### Step 1:  Read in the feature.txt data set and transform names so that they are descriptive, as required by the assignment. I did not change the prefix t (for time domain) and f (for frequency domain) because I believed the column names were already too long.
 
 ```
 df_features <- read.table("features.txt", header=FALSE)
