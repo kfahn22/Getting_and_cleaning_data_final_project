@@ -1,0 +1,215 @@
+---
+title: "Codebook.Rmd"
+author: "Me"
+date: "2/13/2021"
+output: html_document
+---
+
+### The Raw Data
+
+The raw data set (defined as the data before I ran any software on it) contained:
+
+-  A file that contais a list of the features (features.txt) 
+- Two files that contain 561  time and frequency domain variables, normalized and
+bound between [-1,1], and measured in standard units of gravity, g. 
+- The activity labels (1-6),  (y_train.txt/y_test.txt)   
+    + 1 WALKING  
+    + 2 WALKING_UPSTAIRS  
+    + 3 WALKING_DOWNSTAIRS  
+    + 4 SITTING  
+    + 5 STANDING  
+    + 6 LAYING 
+- An identifier of the  subjects who carried out the experiment, ranging from 1:30 
+(subject_train.txt/subject_test.txt). 
+
+The signals were transformed into the following time (t) and frequency (f) 
+domain variables.  The original data set contained many variables that were 
+calculated from each of the following signals, including mean, standard deviation,
+max, min, etc.  The assignment asked us to extract only the columns containing the
+mean and standard deviation data.  
+
+
++ tBodyAcc-XYZ  
++ tGravityAcc-XYZ  
++ tBodyAccJerk-XYZ  
++ tBodyGyro-XYZ  
++ tBodyGyroJerk-XYZ   
++ tBodyAccMag   
++ tGravityAccMag  
++ tBodyAccJerkMag  
++ tBodyGyroMag  
++ tBodyGyroJerkMag  
++ fBodyAcc-XYZ  
++ fBodyAccJerk-XYZ  
++ fBodyGyro-XYZ  
++ fBodyAccMag  
++ fBodyAccJerkMag  
++ fBodyGyroMag  
++- fBodyGyroJerkMag  
+
+As stated in the assignment description, it is assumed that the files are in 
+the working directory.
+
+### Step 1:  Read in the feature.txt data set and transform names so that they are descriptive, as required by the assignment.
+
+```
+df_features <- read.table("features.txt", header=FALSE)
+
+##Change feature names to descriptive variable names
+df_features$V2 <- gsub("Acc", "acceleration_", df_features$V2)
+df_features$V2 <- gsub("Gravity", "gravity_", df_features$V2)
+df_features$V2 <- gsub("Body", "", df_features$V2)
+df_features$V2 <- gsub("Gyro", "gyroscope_", df_features$V2)
+df_features$V2 <- gsub("Jerk", "jerk_", df_features$V2)
+df_features$V2 <- gsub("Mag", "magnitude_", df_features$V2)
+```
+
+### Step 2:  Read in train and test data sets and combine using rbind.  
+
+```
+df_train <- read.table("X_train.txt", sep="", header=FALSE)
+df_test <- read.table("X_test.txt", sep="", header=FALSE)
+accelerometer_data <- rbind(df_train, df_test)
+```
+
+### Step 3:  Add descriptive column names to the dataset using the transformed features data
+
+```
+colnames(accelerometer_data) <- c(df_features$V2)
+```
+
+### Step 4:  Read in data on subjects and combine train and test data sets using 
+rbind
+
+```
+df_subject_train <- read.table("subject_train.txt", header=FALSE, col.names="subject")
+df_subject_test <- read.table("subject_test.txt", header=FALSE, col.names="subject")
+df_subject <- rbind(df_subject_train, df_subject_test)
+```
+
+### Step 5:  Read in data on activity labels and combine train and test data using rbind
+
+```
+activity_train <- read.csv("y_train.txt", header = FALSE, col.names="activity")
+activity_test <- read.csv("y_test.txt", header = FALSE, col.names="activity")
+activity <- rbind(activity_train, activity_test)
+```
+
+### Step 6:  Use recode to change the activity number codes to descriptive labels,as required by the assignment
+
+```
+activity$activity <- recode(activity$activity, `1` = "walking", 
+     `2` = "walking_upstairs", `3`         = "walking_downstairs", `4` = "sitting",
+     `5` = "standing", `6` = "laying")
+```
+
+### Step 7:  Use grepl to find the rows of the features.txt data that contain means, std, or meanFreq().  Since there appearred to be some leaway in which meancolumns to keep, I decided to delete the meanFreq() columns.
+
+```
+m <- grepl("-mean", df_features$V2)
+s <- grepl("-std", df_features$V2)
+f <- grepl("meanFreq()", df_features$V2)
+```
+
+### Step 8:  Use the logical vectors to retrieve the mean and standard deviation variables and remove meanFrequency/all other variables from dataset.
+
+```
+accelerometer_data <- accelerometer_data[, (m == TRUE & (f==FALSE)) | (s==TRUE)]
+```
+
+### Step 9:  Add columns with subject data and activity data to the data set
+
+```
+accelerometer_data <- cbind(df_subject, activity, accelerometer_data)
+```
+
+### Step 10:  Use melt/dcast to find the averages of the variables for each subject and activity.
+
+```
+tidy_data <- melt(accelerometer_data, id=c("subject", "activity"))
+final_tidy_data <- dcast(tidy_data, subject+activity ~ variable, mean)
+```
+
+### The Final Tidy Data Set
+
+The final tidy data set contains 180 observations of 68 variables.  
+
+- each observation forms a row  
+- each variable forms a column  
+
+- The first column, subject, is an id variable ranging from 1-30 that identifies 
+the volunteer
+- The second column, activity, is a descriptive id variable that lists the 
+activity of the volunteer. 
+- Columns 3:68 contain the average value of the processed data for each subject
+and activity
+
+        -  "tacceleration_-mean()-X"  
+        -  "tacceleration_-mean()-Y"                
+        -  "tacceleration_-mean()-Z" 
+        -  "tacceleration_-std()-X"                   
+        -  "tacceleration_-std()-Y"   
+        -  "tacceleration_-std()-Z"                   
+        -  "tgravity_acceleration_-mean()-X"  
+        -  "tgravity_acceleration_-mean()-Y"          
+        -  "tgravity_acceleration_-mean()-Z"  
+        -  "tgravity_acceleration_-std()-X"   
+        -  "tgravity_acceleration_-std()-Y"   
+        -  "tgravity_acceleration_-std()-Z"
+        -  "tacceleration_jerk_-mean()-X" 
+        -  "tacceleration_jerk_-mean()-Y"  
+        -  "tacceleration_jerk_-mean()-Z"  
+        -  "tacceleration_jerk_-std()-X"  
+        -  "tacceleration_jerk_-std()-Y" 
+        -  "tacceleration_jerk_-std()-Z"  
+        -  "tgyroscope_-mean()-X"    
+        -  "tgyroscope_-mean()-Y"                     
+        -  "tgyroscope_-mean()-Z"   
+        -  "tgyroscope_-std()-X"                      
+        -  "tgyroscope_-std()-Y"   
+        -  "tgyroscope_-std()-Z"                      
+        -  "tgyroscope_jerk_-mean()-X" 
+        -  "tgyroscope_jerk_-mean()-Y"              
+        -  "tgyroscope_jerk_-mean()-Z"  
+        -  "tgyroscope_jerk_-std()-X"               
+        -  "tgyroscope_jerk_-std()-Y" 
+        -  "tgyroscope_jerk_-std()-Z"               
+        -  "tacceleration_magnitude_-mean()"   
+        -  "tacceleration_magnitude_-std()"         
+        -  "tgravity_acceleration_magnitude_-mean()" 
+        -  "tgravity_acceleration_magnitude_-std()" 
+        -  "tacceleration_jerk_magnitude_-mean()"  
+        -  "tacceleration_jerk_magnitude_-std()"    
+        -  "tgyroscope_magnitude_-mean()"  
+        -  "tgyroscope_magnitude_-std()"            
+        -  "tgyroscope_jerk_magnitude_-mean()" 
+        -  "tgyroscope_jerk_magnitude_-std()"       
+        -  "facceleration_-mean()-X"   
+        -  "facceleration_-mean()-Y"                
+        -  "facceleration_-mean()-Z"   
+        -  "facceleration_-std()-X"                 
+        -  "facceleration_-std()-Y" 
+        -  "facceleration_-std()-Z"                 
+        -  "facceleration_jerk_-mean()-X"  
+        -  "facceleration_jerk_-mean()-Y"           
+        -  "facceleration_jerk_-mean()-Z" 
+        -  "facceleration_jerk_-std()-X"            
+        -  "facceleration_jerk_-std()-Y" 
+        -  "facceleration_jerk_-std()-Z"            
+        -  "fgyroscope_-mean()-X" 
+        -  "fgyroscope_-mean()-Y"                   
+        -  "fgyroscope_-mean()-Z"    
+        -  "fgyroscope_-std()-X"                    
+        -  "fgyroscope_-std()-Y"  
+        -  "fgyroscope_-std()-Z"                    
+        -  "facceleration_magnitude_-mean()"  
+        -  "facceleration_magnitude_-std()"         
+        -  "facceleration_jerk_magnitude_-mean()"  
+        -  "facceleration_jerk_magnitude_-std()"    
+        -  "fgyroscope_magnitude_-mean()"   
+        -  "fgyroscope_magnitude_-std()"  
+
+### References:
+
+https://thoughtfulbloke.wordpress.com/2015/09/09/getting-and-cleaning-the-assignment/
+https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html
